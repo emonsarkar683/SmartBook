@@ -2,30 +2,64 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Card from '@/components/ui-custom/Card';
+import { PieChart, LineChart, BarChart, ActivitySquare, Download, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { 
-  BarChart3, 
-  LineChart, 
-  PieChart, 
-  Download, 
-  Calendar as CalendarIcon,
-  Filter
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+import StatCard from '@/components/ui-custom/StatCard';
+import {
+  Area,
+  AreaChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell,
+  Legend,
+  BarChart as RechartsBarChart,
+  Bar
+} from 'recharts';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const ReportsPage: React.FC = () => {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-
-  // Mock report types
-  const reportTypes = [
-    { id: 'sales', name: 'Sales Report', icon: BarChart3 },
-    { id: 'expenses', name: 'Expense Report', icon: LineChart },
-    { id: 'profit', name: 'Profit & Loss', icon: PieChart },
-    { id: 'taxes', name: 'Tax Summary', icon: BarChart3 },
-    { id: 'inventory', name: 'Inventory Report', icon: LineChart },
-    { id: 'customer', name: 'Customer Report', icon: PieChart },
+  const isMobile = useIsMobile();
+  
+  // Mock data for charts
+  const revenueData = [
+    { name: 'Jan', value: 4000 },
+    { name: 'Feb', value: 3000 },
+    { name: 'Mar', value: 2000 },
+    { name: 'Apr', value: 2780 },
+    { name: 'May', value: 1890 },
+    { name: 'Jun', value: 2390 },
+    { name: 'Jul', value: 3490 },
+    { name: 'Aug', value: 3800 },
+    { name: 'Sep', value: 4100 },
+    { name: 'Oct', value: 4300 },
+    { name: 'Nov', value: 4500 },
+    { name: 'Dec', value: 4900 },
   ];
+
+  const pieData = [
+    { name: 'Product Sales', value: 65 },
+    { name: 'Services', value: 25 },
+    { name: 'Other', value: 10 },
+  ];
+
+  const barData = [
+    { name: 'Acme Corp', value: 5500 },
+    { name: 'Globex', value: 4200 },
+    { name: 'Wayne Ind.', value: 3800 },
+    { name: 'Stark Ent.', value: 3100 },
+    { name: 'LexCorp', value: 2700 },
+  ];
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+  const pieChartLabel = ({ name, percent }: { name: string; percent: number }) => {
+    return `${name}: ${(percent * 100).toFixed(0)}%`;
+  };
 
   return (
     <div className="space-y-6">
@@ -44,88 +78,139 @@ const ReportsPage: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          Generate and analyze reports for your business
+          View and analyze your business performance
         </motion.p>
       </header>
 
-      <motion.div 
-        className="grid grid-cols-1 md:grid-cols-3 gap-6"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
-      >
-        <div className="md:col-span-2 space-y-6">
-          <Card isGlass className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="font-semibold">Report Types</h2>
-              <Button variant="outline" size="sm" className="gap-1">
-                <Filter className="h-4 w-4" />
-                Filter
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {reportTypes.map((report) => (
-                <div 
-                  key={report.id}
-                  className="flex items-center gap-3 p-4 rounded-lg border border-border/40 hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer"
-                >
-                  <div className="bg-primary/10 rounded-full p-2">
-                    <report.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <div className="font-medium">{report.name}</div>
-                    <div className="text-xs text-muted-foreground">View or download</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-          
-          <Card isGlass className="p-6">
-            <h2 className="font-semibold mb-4">Recent Reports</h2>
-            <div className="space-y-3">
-              {[
-                { name: 'Q2 Sales Summary', date: '2023-06-30', type: 'Sales Report' },
-                { name: 'Monthly Expense Report', date: '2023-05-31', type: 'Expense Report' },
-                { name: 'Inventory Status', date: '2023-05-15', type: 'Inventory Report' },
-              ].map((report, index) => (
-                <div 
-                  key={index}
-                  className="flex justify-between items-center p-3 rounded-lg hover:bg-muted/30 transition-colors"
-                >
-                  <div>
-                    <div className="font-medium">{report.name}</div>
-                    <div className="text-xs text-muted-foreground">{report.date} • {report.type}</div>
-                  </div>
-                  <Button variant="ghost" size="icon">
-                    <Download className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
+        <div className="inline-flex items-center p-1 rounded-lg bg-muted/50 border border-border/40">
+          <Button variant="ghost" size="sm" className="rounded-md">Daily</Button>
+          <Button variant="ghost" size="sm" className="rounded-md">Weekly</Button>
+          <Button variant="default" size="sm" className="rounded-md">Monthly</Button>
+          <Button variant="ghost" size="sm" className="rounded-md">Yearly</Button>
         </div>
         
-        <div>
-          <Card isGlass className="p-6 sticky top-4">
-            <h2 className="font-semibold mb-4">Select Date Range</h2>
-            <div className="space-y-4">
-              <div className="flex gap-2 items-center mb-4 text-sm">
-                <CalendarIcon className="h-4 w-4 opacity-70" />
-                <span>Select dates to generate report</span>
-              </div>
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className={cn("rounded-md border")}
-              />
-              <Button className="w-full mt-4">Generate Report</Button>
-            </div>
-          </Card>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="gap-1">
+            <Calendar className="h-4 w-4" />
+            <span className={isMobile ? "sr-only" : ""}>Date Range</span>
+          </Button>
+          <Button variant="outline" size="sm" className="gap-1">
+            <Download className="h-4 w-4" />
+            <span className={isMobile ? "sr-only" : ""}>Export</span>
+          </Button>
         </div>
-      </motion.div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <StatCard 
+          title="Total Revenue" 
+          value="$82,540.50" 
+          change="+12.5%" 
+          trend="up" 
+          icon={<LineChart className="h-4 w-4 text-green-500" />} 
+        />
+        <StatCard 
+          title="Invoices Sent" 
+          value="254" 
+          change="+8.2%" 
+          trend="up" 
+          icon={<ActivitySquare className="h-4 w-4 text-blue-500" />} 
+        />
+        <StatCard 
+          title="Average Sale" 
+          value="$324.96" 
+          change="-2.4%" 
+          trend="down" 
+          icon={<BarChart className="h-4 w-4 text-orange-500" />} 
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card isGlass className="p-6">
+          <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+            <LineChart className="h-5 w-5 text-primary" />
+            Revenue Trend
+          </h3>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={revenueData}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Area 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="hsl(var(--primary))" 
+                  fillOpacity={1} 
+                  fill="url(#colorUv)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <Card isGlass className="p-6">
+          <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+            <PieChart className="h-5 w-5 text-primary" />
+            Revenue Breakdown
+          </h3>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <RechartsPieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={pieChartLabel}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Legend />
+                <Tooltip />
+              </RechartsPieChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      </div>
+
+      <Card isGlass className="p-6">
+        <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+          <BarChart className="h-5 w-5 text-primary" />
+          Top Customers by Revenue
+        </h3>
+        <div className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <RechartsBarChart
+              layout="vertical"
+              data={barData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <XAxis type="number" />
+              <YAxis dataKey="name" type="category" />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Bar dataKey="value" fill="hsl(var(--secondary))" />
+            </RechartsBarChart>
+          </ResponsiveContainer>
+        </div>
+      </Card>
     </div>
   );
 };

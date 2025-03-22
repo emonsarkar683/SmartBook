@@ -3,26 +3,33 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Card from '@/components/ui-custom/Card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Search, Filter } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, Filter, Download, Plus, FileText, ArrowUpDown, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const InvoicesPage: React.FC = () => {
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  
   // Mock invoice data
   const invoices = [
     { id: 'INV-2023-001', customer: 'Acme Corp', date: '2023-06-15', amount: 1250.00, status: 'paid' },
-    { id: 'INV-2023-002', customer: 'Globex Industries', date: '2023-06-18', amount: 875.50, status: 'pending' },
+    { id: 'INV-2023-002', customer: 'Globex Industries', date: '2023-07-01', amount: 875.50, status: 'pending' },
     { id: 'INV-2023-003', customer: 'Stark Enterprises', date: '2023-06-20', amount: 3200.00, status: 'paid' },
-    { id: 'INV-2023-004', customer: 'Wayne Industries', date: '2023-06-25', amount: 1540.75, status: 'overdue' },
-    { id: 'INV-2023-005', customer: 'LexCorp', date: '2023-06-28', amount: 2100.00, status: 'pending' },
+    { id: 'INV-2023-004', customer: 'Wayne Industries', date: '2023-07-05', amount: 1540.75, status: 'overdue' },
+    { id: 'INV-2023-005', customer: 'LexCorp', date: '2023-06-29', amount: 1050.00, status: 'pending' },
   ];
 
-  // Function to determine status color
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch(status) {
-      case 'paid': return 'bg-green-100 text-green-700';
-      case 'pending': return 'bg-yellow-100 text-yellow-700';
-      case 'overdue': return 'bg-red-100 text-red-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case 'paid':
+        return <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Paid</span>;
+      case 'pending':
+        return <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pending</span>;
+      case 'overdue':
+        return <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Overdue</span>;
+      default:
+        return <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">{status}</span>;
     }
   };
 
@@ -43,7 +50,7 @@ const InvoicesPage: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          Manage and track all your invoices
+          Manage and track your customer invoices
         </motion.p>
       </header>
 
@@ -61,49 +68,53 @@ const InvoicesPage: React.FC = () => {
           />
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" className="gap-1">
             <Filter className="h-4 w-4" />
-            Filter
+            <span className={isMobile ? "sr-only" : ""}>Filter</span>
           </Button>
-          <Link to="/invoices/add">
-            <Button size="sm" className="gap-1">
-              <PlusCircle className="h-4 w-4" />
-              New Invoice
-            </Button>
-          </Link>
+          <Button variant="outline" size="sm" className="gap-1">
+            <Download className="h-4 w-4" />
+            <span className={isMobile ? "sr-only" : ""}>Export</span>
+          </Button>
+          <Button size="sm" className="gap-1" onClick={() => navigate('/invoices/add')}>
+            <Plus className="h-4 w-4" />
+            <span className={isMobile ? "sr-only" : ""}>New Invoice</span>
+          </Button>
         </div>
       </motion.div>
 
       <Card isGlass className="p-6">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto -mx-6">
           <table className="w-full">
             <thead>
               <tr className="border-b text-left">
-                <th className="pb-3 font-medium">Invoice ID</th>
+                <th className="pb-3 pl-6 font-medium">Invoice</th>
                 <th className="pb-3 font-medium">Customer</th>
                 <th className="pb-3 font-medium">Date</th>
                 <th className="pb-3 font-medium text-right">Amount</th>
                 <th className="pb-3 font-medium">Status</th>
-                <th className="pb-3 font-medium text-right">Action</th>
+                <th className="pb-3 pr-6 font-medium text-right">Action</th>
               </tr>
             </thead>
             <tbody>
-              {invoices.map((invoice, index) => (
+              {invoices.map((invoice) => (
                 <tr key={invoice.id} className="border-b border-border/40 hover:bg-muted/30 transition-colors">
-                  <td className="py-3">{invoice.id}</td>
+                  <td className="py-3 pl-6 font-medium">{invoice.id}</td>
                   <td className="py-3">{invoice.customer}</td>
                   <td className="py-3">{invoice.date}</td>
                   <td className="py-3 text-right">${invoice.amount.toFixed(2)}</td>
-                  <td className="py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(invoice.status)}`}>
-                      {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="py-3 text-right">
-                    <Link to={`/invoices/${invoice.id}`}>
-                      <Button variant="ghost" size="sm">View</Button>
-                    </Link>
+                  <td className="py-3">{getStatusBadge(invoice.status)}</td>
+                  <td className="py-3 pr-6 text-right">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="gap-1"
+                      onClick={() => navigate(`/invoices/${invoice.id.toLowerCase()}`)}
+                    >
+                      <span className={isMobile ? "sr-only" : ""}>View</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -111,6 +122,14 @@ const InvoicesPage: React.FC = () => {
           </table>
         </div>
       </Card>
+
+      <div className="flex justify-between items-center mt-6">
+        <p className="text-sm text-muted-foreground">Showing 5 of 25 invoices</p>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" disabled>Previous</Button>
+          <Button variant="outline" size="sm">Next</Button>
+        </div>
+      </div>
     </div>
   );
 };

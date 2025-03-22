@@ -3,9 +3,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Card from '@/components/ui-custom/Card';
 import { Button } from '@/components/ui/button';
-import { Search, Filter, Download, ChevronDown } from 'lucide-react';
+import { Search, Filter, Download, ChevronDown, Eye } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const PaymentsPage: React.FC = () => {
+  const isMobile = useIsMobile();
+
   // Mock payment data
   const payments = [
     { id: 'PAY-001', invoice: 'INV-2023-001', customer: 'Acme Corp', date: '2023-06-15', amount: 1250.00, method: 'Credit Card' },
@@ -53,43 +56,47 @@ const PaymentsPage: React.FC = () => {
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="gap-1">
             <Filter className="h-4 w-4" />
-            Filter
+            <span className={isMobile ? "sr-only" : ""}>Filter</span>
           </Button>
           <Button variant="outline" size="sm" className="gap-1">
             <Download className="h-4 w-4" />
-            Export
+            <span className={isMobile ? "sr-only" : ""}>Export</span>
           </Button>
           <Button size="sm" className="gap-1">
-            Record Payment <ChevronDown className="h-4 w-4 ml-1" />
+            <span className={isMobile ? "sr-only" : ""}>Record Payment</span>
+            <ChevronDown className="h-4 w-4" />
           </Button>
         </div>
       </motion.div>
 
       <Card isGlass className="p-6">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto -mx-6">
           <table className="w-full">
             <thead>
               <tr className="border-b text-left">
-                <th className="pb-3 font-medium">Payment ID</th>
+                <th className="pb-3 pl-6 font-medium">Payment ID</th>
                 <th className="pb-3 font-medium">Invoice</th>
-                <th className="pb-3 font-medium">Customer</th>
-                <th className="pb-3 font-medium">Date</th>
+                <th className="pb-3 font-medium hidden md:table-cell">Customer</th>
+                <th className="pb-3 font-medium hidden sm:table-cell">Date</th>
                 <th className="pb-3 font-medium text-right">Amount</th>
-                <th className="pb-3 font-medium">Method</th>
-                <th className="pb-3 font-medium text-right">Action</th>
+                <th className="pb-3 font-medium hidden lg:table-cell">Method</th>
+                <th className="pb-3 pr-6 font-medium text-right">Action</th>
               </tr>
             </thead>
             <tbody>
               {payments.map((payment) => (
                 <tr key={payment.id} className="border-b border-border/40 hover:bg-muted/30 transition-colors">
-                  <td className="py-3">{payment.id}</td>
+                  <td className="py-3 pl-6">{payment.id}</td>
                   <td className="py-3">{payment.invoice}</td>
-                  <td className="py-3">{payment.customer}</td>
-                  <td className="py-3">{payment.date}</td>
+                  <td className="py-3 hidden md:table-cell">{payment.customer}</td>
+                  <td className="py-3 hidden sm:table-cell">{payment.date}</td>
                   <td className="py-3 text-right">${payment.amount.toFixed(2)}</td>
-                  <td className="py-3">{payment.method}</td>
-                  <td className="py-3 text-right">
-                    <Button variant="ghost" size="sm">Details</Button>
+                  <td className="py-3 hidden lg:table-cell">{payment.method}</td>
+                  <td className="py-3 pr-6 text-right">
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <span className="sr-only">View Details</span>
+                      <Eye className="h-4 w-4" />
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -97,6 +104,14 @@ const PaymentsPage: React.FC = () => {
           </table>
         </div>
       </Card>
+
+      <div className="flex justify-between items-center mt-6">
+        <p className="text-sm text-muted-foreground">Showing 5 of 18 payments</p>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" disabled>Previous</Button>
+          <Button variant="outline" size="sm">Next</Button>
+        </div>
+      </div>
     </div>
   );
 };
