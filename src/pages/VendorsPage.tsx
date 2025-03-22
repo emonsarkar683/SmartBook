@@ -3,149 +3,106 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Card from '@/components/ui-custom/Card';
 import { Button } from '@/components/ui/button';
-import { UserPlus, Search, Building, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { PlusCircle, Search, Filter } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const VendorsPage: React.FC = () => {
-  const navigate = useNavigate();
-  
-  // Mock vendor data
+  // Mock vendors data
   const vendors = [
-    { id: '1', name: 'Office Supplies Co.', contact: 'Jessica Brown', email: 'jessica@officesupplies.co', phone: '(555) 234-5678' },
-    { id: '2', name: 'Global Shipping LLC', contact: 'Michael Chen', email: 'michael@globalshipping.com', phone: '(555) 345-6789' },
-    { id: '3', name: 'Digital Marketing Agency', contact: 'Emma Wilson', email: 'emma@digitalmarketing.io', phone: '(555) 456-7890' },
-    { id: '4', name: 'Tech Hardware Inc.', contact: 'David Rodriguez', email: 'david@techhardware.com', phone: '(555) 567-8901' },
+    { id: 'VEN-001', name: 'TechSupplies Inc.', contact: 'John Smith', email: 'john@techsupplies.com', phone: '(555) 123-4567', status: 'active' },
+    { id: 'VEN-002', name: 'Global Materials Co.', contact: 'Sarah Johnson', email: 'sarah@globalmaterials.com', phone: '(555) 234-5678', status: 'active' },
+    { id: 'VEN-003', name: 'Quality Parts Ltd.', contact: 'Michael Brown', email: 'michael@qualityparts.com', phone: '(555) 345-6789', status: 'inactive' },
+    { id: 'VEN-004', name: 'Speedy Logistics', contact: 'Emma Wilson', email: 'emma@speedylogistics.com', phone: '(555) 456-7890', status: 'active' },
+    { id: 'VEN-005', name: 'Office Solutions', contact: 'David Miller', email: 'david@officesolutions.com', phone: '(555) 567-8901', status: 'active' },
   ];
 
   return (
     <div className="space-y-6">
       <header>
-        <motion.div 
-          className="flex items-center gap-2"
+        <motion.h1 
+          className="text-2xl font-bold mb-1"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Building className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold">Vendors</h1>
-        </motion.div>
+          Vendors
+        </motion.h1>
         <motion.p 
-          className="text-muted-foreground mt-1"
+          className="text-muted-foreground"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          Manage your suppliers and service providers
+          Manage your suppliers and vendors
         </motion.p>
       </header>
 
       <motion.div 
-        className="flex items-center gap-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        className="flex flex-col sm:flex-row justify-between gap-4"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
       >
-        <div className="relative flex-1">
+        <div className="relative w-full sm:w-72">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <input 
-            type="text" 
-            placeholder="Search vendors..." 
-            className="w-full pl-10 pr-4 py-2 bg-background rounded-lg border border-input focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200 text-sm"
+            className="pl-10 pr-4 py-2 w-full rounded-md border border-input bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            placeholder="Search vendors..."
           />
         </div>
-        <Button 
-          className="gap-2" 
-          onClick={() => navigate('/vendors/add')}
-        >
-          <UserPlus className="h-4 w-4" />
-          Add Vendor
-        </Button>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.3 }}
-      >
-        <Card isGlass>
-          <div className="divide-y divide-border/20">
-            {vendors.map((vendor) => (
-              <div 
-                key={vendor.id} 
-                className="p-4 hover:bg-muted/20 transition-colors cursor-pointer"
-                onClick={() => {/* Navigate to vendor detail when implemented */}}
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-medium text-lg">{vendor.name}</h3>
-                    <p className="text-muted-foreground">{vendor.contact}</p>
-                    <div className="mt-1 text-sm flex flex-wrap gap-x-4">
-                      <span>{vendor.email}</span>
-                      <span>{vendor.phone}</span>
-                    </div>
-                  </div>
-                  <button className="p-2 rounded-full hover:bg-muted-foreground/10 transition-colors mt-1">
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.4 }}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6"
-      >
-        <Card isGlass className="p-6">
-          <h2 className="font-semibold mb-4">Recent Orders</h2>
-          <div className="space-y-3">
-            {[
-              { vendor: 'Office Supplies Co.', date: '2023-05-10', amount: '$1,250.00' },
-              { vendor: 'Global Shipping LLC', date: '2023-04-28', amount: '$3,400.00' },
-              { vendor: 'Tech Hardware Inc.', date: '2023-04-15', amount: '$5,600.00' },
-            ].map((order, index) => (
-              <div key={index} className="flex justify-between items-center p-2 rounded-lg hover:bg-muted/30 transition-colors">
-                <div>
-                  <div className="font-medium">{order.vendor}</div>
-                  <div className="text-xs text-muted-foreground">{order.date}</div>
-                </div>
-                <div className="font-medium">{order.amount}</div>
-              </div>
-            ))}
-          </div>
-        </Card>
         
-        <Card isGlass className="p-6">
-          <h2 className="font-semibold mb-4">Pending Payments</h2>
-          <div className="space-y-3">
-            {[
-              { vendor: 'Digital Marketing Agency', due: '2023-06-15', amount: '$2,750.00', status: 'Due Soon' },
-              { vendor: 'Office Supplies Co.', due: '2023-06-30', amount: '$850.00', status: 'Upcoming' },
-            ].map((payment, index) => (
-              <div key={index} className="flex justify-between items-center p-2 rounded-lg hover:bg-muted/30 transition-colors">
-                <div>
-                  <div className="font-medium">{payment.vendor}</div>
-                  <div className="text-xs text-muted-foreground">Due: {payment.due}</div>
-                </div>
-                <div>
-                  <div className="font-medium text-right">{payment.amount}</div>
-                  <div className="text-xs text-right">
-                    <span className={`px-1.5 py-0.5 rounded-full ${
-                      payment.status === 'Due Soon' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
-                    }`}>
-                      {payment.status}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="gap-1">
+            <Filter className="h-4 w-4" />
+            Filter
+          </Button>
+          <Link to="/vendors/add">
+            <Button size="sm" className="gap-1">
+              <PlusCircle className="h-4 w-4" />
+              Add Vendor
+            </Button>
+          </Link>
+        </div>
       </motion.div>
+
+      <Card isGlass className="p-6">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="pb-3 font-medium">Vendor ID</th>
+                <th className="pb-3 font-medium">Name</th>
+                <th className="pb-3 font-medium">Contact Person</th>
+                <th className="pb-3 font-medium">Email</th>
+                <th className="pb-3 font-medium">Phone</th>
+                <th className="pb-3 font-medium">Status</th>
+                <th className="pb-3 font-medium text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vendors.map((vendor) => (
+                <tr key={vendor.id} className="border-b border-border/40 hover:bg-muted/30 transition-colors">
+                  <td className="py-3">{vendor.id}</td>
+                  <td className="py-3">{vendor.name}</td>
+                  <td className="py-3">{vendor.contact}</td>
+                  <td className="py-3">{vendor.email}</td>
+                  <td className="py-3">{vendor.phone}</td>
+                  <td className="py-3">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      vendor.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                    }`}>
+                      {vendor.status.charAt(0).toUpperCase() + vendor.status.slice(1)}
+                    </span>
+                  </td>
+                  <td className="py-3 text-right">
+                    <Button variant="ghost" size="sm">View</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </div>
   );
 };
