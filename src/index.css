@@ -91,6 +91,10 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
+    background-image: 
+      radial-gradient(at 100% 0%, hsla(240, 100%, 97%, 0.4) 0px, transparent 50%),
+      radial-gradient(at 0% 0%, hsla(210, 100%, 97%, 0.3) 0px, transparent 50%);
+    background-attachment: fixed;
   }
 
   /* Custom Scrollbar */
@@ -183,10 +187,26 @@
   }
   
   .section-title {
-    @apply text-xl font-semibold mb-4 inline-flex items-center;
+    @apply text-xl font-semibold mb-4 inline-flex items-center gap-2;
   }
   
   .chip {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-light text-primary-dark;
+  }
+
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+
+  .responsive-grid-tight {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3;
+  }
+
+  .page-header {
+    @apply flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-border/40;
+  }
+
+  .page-title {
+    @apply text-2xl font-bold;
   }
 }

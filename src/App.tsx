@@ -26,38 +26,48 @@ import TaxesPage from "./pages/TaxesPage";
 import PaymentsPage from "./pages/PaymentsPage";
 import CustomerDetailPage from "./pages/CustomerDetailPage";
 import InvoiceDetailPage from "./pages/InvoiceDetailPage";
+import { AnimatePresence } from "framer-motion";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AppProvider>
       <TooltipProvider>
         <Toaster />
-        <Sonner />
+        <Sonner position="top-right" />
         <BrowserRouter>
-          <Routes>
-            <Route path="/index" element={<Index />} />
-            <Route element={<AppLayout />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/customers" element={<CustomersPage />} />
-              <Route path="/customers/add" element={<AddNewCustomerPage />} />
-              <Route path="/customers/:id" element={<CustomerDetailPage />} />
-              <Route path="/vendors" element={<VendorsPage />} />
-              <Route path="/vendors/add" element={<AddNewVendorPage />} />
-              <Route path="/invoices" element={<InvoicesPage />} />
-              <Route path="/invoices/add" element={<AddNewInvoicePage />} />
-              <Route path="/invoices/:id" element={<InvoiceDetailPage />} />
-              <Route path="/payments" element={<PaymentsPage />} />
-              <Route path="/inventory" element={<InventoryPage />} />
-              <Route path="/taxes" element={<TaxesPage />} />
-              <Route path="/reports" element={<ReportsPage />} />
-              <Route path="/alerts" element={<AlertsPage />} />
-              <Route path="/import-export" element={<ImportExportPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/index" element={<Index />} />
+              <Route element={<AppLayout />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/customers" element={<CustomersPage />} />
+                <Route path="/customers/add" element={<AddNewCustomerPage />} />
+                <Route path="/customers/:id" element={<CustomerDetailPage />} />
+                <Route path="/vendors" element={<VendorsPage />} />
+                <Route path="/vendors/add" element={<AddNewVendorPage />} />
+                <Route path="/invoices" element={<InvoicesPage />} />
+                <Route path="/invoices/add" element={<AddNewInvoicePage />} />
+                <Route path="/invoices/:id" element={<InvoiceDetailPage />} />
+                <Route path="/payments" element={<PaymentsPage />} />
+                <Route path="/inventory" element={<InventoryPage />} />
+                <Route path="/taxes" element={<TaxesPage />} />
+                <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/alerts" element={<AlertsPage />} />
+                <Route path="/import-export" element={<ImportExportPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AnimatePresence>
         </BrowserRouter>
       </TooltipProvider>
     </AppProvider>

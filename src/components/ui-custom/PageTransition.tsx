@@ -9,11 +9,11 @@ interface PageTransitionProps {
 const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.4, ease: 'easeInOut' }}
-      className="w-full h-full px-4 pb-20 pt-6"
+      exit={{ opacity: 0, y: 15 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="w-full h-full px-4 sm:px-6 pt-6 pb-24"
     >
       {children}
     </motion.div>

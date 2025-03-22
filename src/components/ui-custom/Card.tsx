@@ -19,9 +19,9 @@ const Card: React.FC<CardProps> = ({
   return (
     <div
       className={cn(
-        'rounded-lg shadow-card p-4',
-        isGlass && 'glass-panel',
-        isHoverable && 'card-hover',
+        'rounded-xl shadow-sm p-4 bg-card border border-border/40',
+        isGlass && 'backdrop-blur-md bg-background/70',
+        isHoverable && 'transition-all duration-300 hover:-translate-y-1 hover:shadow-md',
         className
       )}
       {...props}

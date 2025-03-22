@@ -5,6 +5,7 @@ import { LayoutDashboard, Users, FileText, Package2, Settings } from 'lucide-rea
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Reduced to only 5 main items
 const navItems = [
@@ -17,17 +18,18 @@ const navItems = [
 
 const Navbar: React.FC = () => {
   const location = useLocation();
+  const isMobile = useIsMobile();
   
   return (
-    <nav className="flex justify-center fixed bottom-0 left-0 right-0 z-10 p-1 bg-background/70 backdrop-blur-lg border-t border-border overflow-x-auto">
-      <div className="flex justify-around items-center w-full max-w-3xl">
+    <nav className="flex justify-center fixed bottom-0 left-0 right-0 z-10 p-2 bg-background/80 backdrop-blur-lg border-t border-border shadow-lg overflow-x-auto">
+      <div className="flex justify-around items-center w-full max-w-xl">
         <TooltipProvider>
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
             
             return (
-              <Tooltip key={item.path}>
+              <Tooltip key={item.path} delayDuration={300}>
                 <TooltipTrigger asChild>
                   <NavLink 
                     to={item.path}
@@ -36,24 +38,25 @@ const Navbar: React.FC = () => {
                     {isActive && (
                       <motion.div
                         layoutId="navbar-indicator"
-                        className="absolute inset-0 rounded-xl bg-primary-light z-0"
+                        className="absolute inset-0 rounded-xl bg-primary/10 z-0"
                         initial={false}
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
                     
                     <Icon 
-                      size={20} 
+                      size={isMobile ? 22 : 20} 
                       className={cn(
-                        "relative", 
+                        "relative z-10", 
                         isActive ? "text-primary" : "text-muted-foreground"
                       )} 
                     />
                     
                     <span 
                       className={cn(
-                        "mt-1 text-[10px] font-medium relative hidden xs:inline-block", 
-                        isActive ? "text-primary" : "text-muted-foreground"
+                        "mt-1 text-[11px] font-medium relative z-10 transition-opacity duration-200 ease-in-out", 
+                        isActive ? "text-primary" : "text-muted-foreground",
+                        isMobile ? "opacity-100" : "xs:opacity-100 opacity-0"
                       )}
                     >
                       {item.label}
