@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import Card from '@/components/ui-custom/Card';
@@ -106,23 +105,20 @@ const ReportsPage: React.FC = () => {
         <StatCard 
           title="Total Revenue" 
           value="$82,540.50" 
-          change="+12.5%" 
-          trend="up" 
-          icon={<LineChart className="h-4 w-4 text-green-500" />} 
+          trend={{ value: 12.5, isPositive: true }}
+          icon={LineChart}
         />
         <StatCard 
           title="Invoices Sent" 
           value="254" 
-          change="+8.2%" 
-          trend="up" 
-          icon={<ActivitySquare className="h-4 w-4 text-blue-500" />} 
+          trend={{ value: 8.2, isPositive: true }}
+          icon={ActivitySquare}
         />
         <StatCard 
           title="Average Sale" 
           value="$324.96" 
-          change="-2.4%" 
-          trend="down" 
-          icon={<BarChart className="h-4 w-4 text-orange-500" />} 
+          trend={{ value: 2.4, isPositive: false }}
+          icon={BarChart}
         />
       </div>
 
